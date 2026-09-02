@@ -6,7 +6,7 @@
   <title>Bubuu Tinguu💖</title>
   
   <meta property="og:title" content="ye dil tum bin lagta nahin">
-  <meta property="og:description" content="little space built just for you, Aashika.">
+  <meta property="og:description" content="A little space built just for you, Aashika.">
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -38,7 +38,7 @@
       position: fixed;
       top: 20px;
       right: 20px;
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(8px);
       border: 2px solid var(--accent-soft);
       width: 45px;
@@ -134,7 +134,7 @@
       margin: 40px 0 20px 0;
     }
 
-    /* Cards */
+    /* Cards Layout & Text Alignment */
     .cards-container {
       padding: 0 20px 40px 20px;
       max-width: 400px;
@@ -143,7 +143,7 @@
 
     .flip-card {
       background-color: transparent;
-      min-height: 160px;
+      min-height: 180px;
       perspective: 1000px;
       margin-bottom: 25px;
       cursor: pointer;
@@ -153,7 +153,7 @@
       position: relative;
       width: 100%;
       height: 100%;
-      min-height: 160px;
+      min-height: 180px;
       text-align: center;
       transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
       transform-style: preserve-3d;
@@ -167,6 +167,7 @@
       position: absolute;
       width: 100%;
       height: 100%;
+      min-height: 180px;
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
       border-radius: 20px;
@@ -174,8 +175,9 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 24px 20px;
       box-shadow: 0 8px 25px rgba(255, 77, 109, 0.08);
+      text-align: center;
     }
 
     .card-front {
@@ -190,9 +192,28 @@
       transform: rotateY(180deg);
     }
 
-    .card-front h3 { font-size: 1.2rem; }
-    .card-front span { font-size: 0.85rem; opacity: 0.7; margin-top: 6px; }
-    .card-back p { font-size: 0.95rem; color: white; line-height: 1.5; margin-bottom: 6px; }
+    .card-front h3 { 
+      font-size: 1.25rem; 
+      font-weight: 700;
+    }
+
+    .card-front span { 
+      font-size: 0.85rem; 
+      opacity: 0.75; 
+      margin-top: 8px; 
+    }
+
+    .card-back p { 
+      font-size: 0.95rem; 
+      color: white; 
+      line-height: 1.6; 
+      margin-bottom: 8px;
+      width: 100%;
+    }
+
+    .card-back p:last-child {
+      margin-bottom: 0;
+    }
 
     /* Hug Button */
     .interactive-section {
@@ -308,7 +329,7 @@
       <div class="flip-card-inner">
         <div class="card-front">
           <h3>mero laagi timi</h3>
-          <span></span>
+          <span>Tap to flip ✨</span>
         </div>
         <div class="card-back">
           <p>haraudo raichu ma, baato khojdu raichu ma</p>
@@ -322,6 +343,7 @@
       <div class="flip-card-inner">
         <div class="card-front">
           <h3>a little reminder</h3>
+          <span>Tap to flip ✨</span>
         </div>
         <div class="card-back">
           <p>timi samaye ley dhani chau. kati baadha aru aulaan, tara na attinu, haar namannu.</p>
@@ -334,7 +356,7 @@
       <div class="flip-card-inner">
         <div class="card-front">
           <h3>mero kamana</h3>
-          <span>11:11</span>
+          <span>11:11 ✨</span>
         </div>
         <div class="card-back">
           <p>bubu, sadhai haasirakhnu 😊</p>
@@ -363,24 +385,33 @@
     const musicBtn = document.getElementById('musicBtn');
     let hasPlayed = false;
 
-    // Trigger audio on first interaction (scroll, tap, click)
+    // Trigger audio playback across all touch/scroll/click events
     function startAudioOnInteraction() {
       if (!hasPlayed) {
         audio.play().then(() => {
           hasPlayed = true;
           musicBtn.classList.add('playing');
           musicBtn.innerText = '🎶';
+          removeAllInteractionListeners();
         }).catch(err => {
-          console.log("Autoplay waiting for user gesture:", err);
+          console.log("Autoplay waiting for active user gesture:", err);
         });
       }
     }
 
-    window.addEventListener('touchstart', startAudioOnInteraction, { once: true });
-    window.addEventListener('click', startAudioOnInteraction, { once: true });
-    window.addEventListener('scroll', startAudioOnInteraction, { once: true });
+    const interactionEvents = ['touchstart', 'touchend', 'touchmove', 'click', 'scroll', 'pointerdown', 'wheel'];
 
-    // Music Button Toggle
+    interactionEvents.forEach(eventType => {
+      window.addEventListener(eventType, startAudioOnInteraction, { passive: true });
+    });
+
+    function removeAllInteractionListeners() {
+      interactionEvents.forEach(eventType => {
+        window.removeEventListener(eventType, startAudioOnInteraction);
+      });
+    }
+
+    // Manual Music Button Toggle
     function toggleMusic() {
       if (audio.paused) {
         audio.play();
@@ -409,10 +440,10 @@
       setTimeout(() => heart.remove(), 1000);
     }
 
-    window.addEventListener('touchmove', createHeart);
+    window.addEventListener('touchmove', createHeart, { passive: true });
     window.addEventListener('mousemove', createHeart);
 
-    // Big Hug Trigger (Pop-Up + Confetti)
+    // Big Hug Pop-Up & Confetti Trigger
     function triggerLove() {
       confetti({
         particleCount: 100,
