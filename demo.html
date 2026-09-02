@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For My Bubuu Tinguu 🐼💖</title>
+  
+  <!-- iOS Preview & Metadata -->
+  <meta property="og:title" content="Open when you miss me 💖">
+  <meta property="og:description" content="A special little space built just for you, Aashika.">
+
+  <!-- Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg-color: #fff0f3;
+      --card-bg: #ffffff;
+      --accent: #ff4d6d;
+      --accent-soft: #ff8fa3;
+      --text: #4a3e3d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* Music Control Button */
+    .music-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      border: 2px solid var(--accent-soft);
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 10000;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.3s ease;
+    }
+
+    .music-toggle.playing {
+      animation: rotateDisc 3s linear infinite;
+    }
+
+    @keyframes rotateDisc {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Floating Trail Hearts */
+    .heart-trail {
+      position: fixed;
+      pointer-events: none;
+      font-size: 20px;
+      animation: fadeUp 1s ease-out forwards;
+      z-index: 9999;
+    }
+
+    @keyframes fadeUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-40px) scale(1.4); }
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      background: #ffe5ec;
+      color: var(--accent);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      max-width: 320px;
+      line-height: 1.6;
+      opacity: 0.9;
+    }
+
+    .scroll-hint {
+      margin-top: 50px;
+      font-size: 0.9rem;
+      color: var(--accent-soft);
+      font-weight: bold;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+
+    /* Section Styling */
+    .section-title {
+      text-align: center;
+      color: var(--accent);
+      font-size: 1.5rem;
+      margin: 40px 0 20px 0;
+    }
+
+    /* Cards */
+    .cards-container {
+      padding: 0 20px 40px 20px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .flip-card {
+      background-color: transparent;
+      min-height: 160px;
+      perspective: 1000px;
+      margin-bottom: 25px;
+      cursor: pointer;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 160px;
+      text-align: center;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-shadow: 0 8px 25px rgba(255, 77, 109, 0.08);
+    }
+
+    .card-front {
+      background: var(--card-bg);
+      border: 2px dashed #ffccd5;
+      color: var(--accent);
+    }
+
+    .card-back {
+      background: linear-gradient(135deg, #ff758f, #ff4d6d);
+      color: white;
+      transform: rotateY(180deg);
+    }
+
+    .card-front h3 { font-size: 1.2rem; }
+    .card-front span { font-size: 0.85rem; opacity: 0.7; margin-top: 6px; }
+    .card-back p { font-size: 0.95rem; color: white; line-height: 1.5; margin-bottom: 6px; }
+
+    /* Hug Button */
+    .interactive-section {
+      text-align: center;
+      padding: 20px 20px 80px 20px;
+    }
+
+    .hug-btn {
+      background: linear-gradient(135deg, #ff4d6d, #c9184a);
+      color: white;
+      border: none;
+      padding: 18px 36px;
+      border-radius: 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(255, 77, 109, 0.3);
+      transition: transform 0.2s;
+    }
+
+    .hug-btn:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Music Toggle -->
+  <button id="musicBtn" class="music-toggle" onclick="toggleMusic()">🎵</button>
+  <audio id="bgMusic" loop src="song.mp3"></audio>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero-badge">🐼 to my bubu 🐼</div>
+    <h1>Aashika</h1>
+    <div class="hero-subtitle">
+      <p>mero saathi, meri mayalu</p>
+      <p style="margin-top: 8px; opacity: 0.8;">I wish we met earlier 💖</p>
+    </div>
+    <div class="scroll-hint">Tap anywhere or scroll to start ✨</div>
+  </div>
+
+  <!-- Interactive Section -->
+  <div class="section-title">Tap to reveal ✨</div>
+  
+  <div class="cards-container">
+    
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="card-front">
+          <h3>mero laagi timi</h3>
+          <span>Tap to flip</span>
+        </div>
+        <div class="card-back">
+          <p>haraudo raichu ma, baato khojdu raichu ma</p>
+          <p>holan dherai mann bhulauney upaye</p>
+          <p>tara timilai matra rojdu raichu ma</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="card-front">
+          <h3>a little reminder</h3>
+          <span>Tap to flip</span>
+        </div>
+        <div class="card-back">
+          <p>timi samaye ley dhani chau. kati baadha sahanu cha hola, tara na attinu, haar namannu.</p>
+          <p>khusi ka haat haru timilai angaalo lagauna parkhiraheka chan. you're so brave maya💖</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="card-front">
+          <h3>mero kamana</h3>
+          <span>11:11</span>
+        </div>
+        <div class="card-back">
+          <p>bubu, sadhai haasirakhnu 😊</p>
+          <p>timro jiwan arthapurna hoss ✨</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Hug Button -->
+  <div class="interactive-section">
+    <button class="hug-btn" onclick="triggerLove()">Tap for a Big Hug 🫂</button>
+  </div>
+
+  <script>
+    const audio = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    let hasPlayed = false;
+
+    // Trigger audio on first touch/interaction anywhere on the screen
+    function startAudioOnInteraction() {
+      if (!hasPlayed) {
+        audio.play().then(() => {
+          hasPlayed = true;
+          musicBtn.classList.add('playing');
+          musicBtn.innerText = '🎶';
+        }).catch(err => {
+          console.log("Autoplay waiting for user gesture:", err);
+        });
+      }
+    }
+
+    // Attach interaction listeners to the body
+    window.addEventListener('touchstart', startAudioOnInteraction, { once: true });
+    window.addEventListener('click', startAudioOnInteraction, { once: true });
+    window.addEventListener('scroll', startAudioOnInteraction, { once: true });
+
+    // Manual Toggle
+    function toggleMusic() {
+      if (audio.paused) {
+        audio.play();
+        musicBtn.classList.add('playing');
+        musicBtn.innerText = '🎶';
+      } else {
+        audio.pause();
+        musicBtn.classList.remove('playing');
+        musicBtn.innerText = '🎵';
+      }
+    }
+
+    // Heart Trail Effect
+    function createHeart(e) {
+      const heart = document.createElement('div');
+      heart.className = 'heart-trail';
+      heart.innerHTML = ['💖', '🌸', '✨', '🐼'][Math.floor(Math.random() * 4)];
+      
+      const x = e.touches ? e.touches[0].clientX : e.clientX;
+      const y = e.touches ? e.touches[0].clientY : e.clientY;
+      
+      heart.style.left = (x - 10) + 'px';
+      heart.style.top = (y - 10) + 'px';
+      
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 1000);
+    }
+
+    window.addEventListener('touchmove', createHeart);
+    window.addEventListener('mousemove', createHeart);
+
+    // Confetti
+    function triggerLove() {
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+    }
+  </script>
+</body>
+</html>
