@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>For My Bubuu Tinguu 🐼💖</title>
   
-  <!-- iOS Preview & Metadata -->
   <meta property="og:title" content="Open when you miss me 💖">
   <meta property="og:description" content="A special little space built just for you, Aashika.">
 
-  <!-- Confetti Library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -35,7 +33,7 @@
       scroll-behavior: smooth;
     }
 
-    /* Music Control Button */
+    /* Floating Music Toggle Button */
     .music-toggle {
       position: fixed;
       top: 20px;
@@ -218,15 +216,80 @@
     .hug-btn:active {
       transform: scale(0.95);
     }
+
+    /* Big Hug Pop-Up Overlay */
+    .hug-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(6px);
+      z-index: 20000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .hug-modal-content {
+      background: white;
+      padding: 30px 25px;
+      border-radius: 25px;
+      text-align: center;
+      max-width: 320px;
+      box-shadow: 0 15px 35px rgba(255, 77, 109, 0.3);
+      animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .hug-modal-content .hug-emoji {
+      font-size: 3.5rem;
+      margin-bottom: 12px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .hug-modal-content h2 {
+      color: var(--accent);
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .hug-modal-content p {
+      font-size: 0.98rem;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .close-btn {
+      background: linear-gradient(135deg, #ff4d6d, #c9184a);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+    }
   </style>
 </head>
 <body>
 
-  <!-- Floating Music Toggle -->
   <button id="musicBtn" class="music-toggle" onclick="toggleMusic()">🎵</button>
   <audio id="bgMusic" loop src="song.mp3"></audio>
 
-  <!-- Hero Section -->
   <div class="hero">
     <div class="hero-badge">🐼 to my bubu 🐼</div>
     <h1>Aashika</h1>
@@ -237,7 +300,6 @@
     <div class="scroll-hint">Tap anywhere or scroll to start ✨</div>
   </div>
 
-  <!-- Interactive Section -->
   <div class="section-title">Tap to reveal ✨</div>
   
   <div class="cards-container">
@@ -264,7 +326,7 @@
         </div>
         <div class="card-back">
           <p>timi samaye ley dhani chau. kati baadha sahanu cha hola, tara na attinu, haar namannu.</p>
-          <p>khusi ka haat haru timilai angaalo lagauna parkhiraheka chan. you're so brave maya💖</p>
+          <p>life isn't parallel, khusi ka haat haru timilai angaalo lagauna parkhiraheka chan. you're so brave maya💖</p>
         </div>
       </div>
     </div>
@@ -284,9 +346,17 @@
 
   </div>
 
-  <!-- Hug Button -->
   <div class="interactive-section">
     <button class="hug-btn" onclick="triggerLove()">Tap for a Big Hug 🫂</button>
+  </div>
+
+  <div id="hugModal" class="hug-modal" onclick="closeHug()">
+    <div class="hug-modal-content" onclick="event.stopPropagation()">
+      <div class="hug-emoji">🐼🫂🐻</div>
+      <h2>BIG BUBU HUG!</h2>
+      <p>Sending you the warmest, tightest hug right now! Dudu is holding Bubu tight, and I'm holding you forever, maya 💖</p>
+      <button class="close-btn" onclick="closeHug()">Wrap Arms Back 🫂</button>
+    </div>
   </div>
 
   <script>
@@ -294,7 +364,7 @@
     const musicBtn = document.getElementById('musicBtn');
     let hasPlayed = false;
 
-    // Trigger audio on first touch/interaction anywhere on the screen
+    // Trigger audio on first interaction (scroll, tap, click)
     function startAudioOnInteraction() {
       if (!hasPlayed) {
         audio.play().then(() => {
@@ -307,12 +377,11 @@
       }
     }
 
-    // Attach interaction listeners to the body
     window.addEventListener('touchstart', startAudioOnInteraction, { once: true });
     window.addEventListener('click', startAudioOnInteraction, { once: true });
     window.addEventListener('scroll', startAudioOnInteraction, { once: true });
 
-    // Manual Toggle
+    // Music Button Toggle
     function toggleMusic() {
       if (audio.paused) {
         audio.play();
@@ -325,7 +394,7 @@
       }
     }
 
-    // Heart Trail Effect
+    // Touch Heart Trail Effect
     function createHeart(e) {
       const heart = document.createElement('div');
       heart.className = 'heart-trail';
@@ -344,13 +413,19 @@
     window.addEventListener('touchmove', createHeart);
     window.addEventListener('mousemove', createHeart);
 
-    // Confetti
+    // Big Hug Trigger (Pop-Up + Confetti)
     function triggerLove() {
       confetti({
-        particleCount: 120,
+        particleCount: 100,
         spread: 80,
         origin: { y: 0.6 }
       });
+
+      document.getElementById('hugModal').style.display = 'flex';
+    }
+
+    function closeHug() {
+      document.getElementById('hugModal').style.display = 'none';
     }
   </script>
 </body>
