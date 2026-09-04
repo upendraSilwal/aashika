@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bubuu Tinguu💖</title>
   
-  <meta property="og:title" content="kahile kahi herirakhnu">
-  <meta property="og:description" content="A little space built just for you">
+  <meta property="og:title" content="ye dil tum bin lagta nahin">
+  <meta property="og:description" content="A little space built just for you, Aashika.">
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -118,11 +118,11 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Floating Trail Hearts */
+    /* Floating Trail Hearts & Emojis */
     .heart-trail {
       position: fixed;
       pointer-events: none;
-      font-size: 20px;
+      font-size: 22px;
       animation: fadeUp 0.9s ease-out forwards;
       z-index: 9999;
     }
@@ -384,7 +384,7 @@
 
   <div class="main-wrapper">
     <button id="musicBtn" class="music-toggle" onclick="toggleMusic()">🎵</button>
-    <audio id="bgMusic" loop src="song.mp3"></audio>
+    <audio id="bgMusic" loop></audio>
 
     <div class="hero">
       <div class="hero-badge">🐼 to my bubu 🐼</div>
@@ -459,7 +459,15 @@
     const musicBtn = document.getElementById('musicBtn');
     let hasPlayed = false;
 
-    // 1. Dynamic Time-Based Greeting
+    // 1. Multi-Track Playlist & Random Track Selector
+    const musicPlaylist = ['song1.mp3', 'song2.mp3', 'song3.mp3'];
+    
+    function setRandomMusic() {
+      const randomIndex = Math.floor(Math.random() * musicPlaylist.length);
+      audio.src = musicPlaylist[randomIndex];
+    }
+
+    // 2. Dynamic Time-Based Greeting
     function setDynamicGreeting() {
       const badgeElement = document.querySelector('.hero-badge');
       if (!badgeElement) return;
@@ -480,9 +488,12 @@
       badgeElement.innerText = greeting;
     }
 
-    window.addEventListener('DOMContentLoaded', setDynamicGreeting);
+    window.addEventListener('DOMContentLoaded', () => {
+      setRandomMusic();
+      setDynamicGreeting();
+    });
 
-    // 2. Audio Playback
+    // 3. Audio Playback Trigger
     function startAudioOnInteraction() {
       if (!hasPlayed) {
         audio.play().then(() => {
@@ -508,7 +519,7 @@
       });
     }
 
-    // 3. Music Toggle
+    // 4. Manual Music Toggle
     function toggleMusic() {
       if (audio.paused) {
         audio.play();
@@ -521,16 +532,18 @@
       }
     }
 
-    // 4. Optimized Throttled Heart Trail
+    // 5. Custom Emoji Trail (Cheesecake, Lotus, Loudly Crying, Sleepy)
     let lastHeartTime = 0;
+    const trailEmojis = ['🍰', '🪷', '😭', '😴'];
+
     function createHeart(e) {
       const now = Date.now();
-      if (now - lastHeartTime < 60) return; // Limit generation frequency
+      if (now - lastHeartTime < 65) return; // Throttled for performance
       lastHeartTime = now;
 
       const heart = document.createElement('div');
       heart.className = 'heart-trail';
-      heart.innerHTML = ['💖', '🌸', '✨', '🐼'][Math.floor(Math.random() * 4)];
+      heart.innerHTML = trailEmojis[Math.floor(Math.random() * trailEmojis.length)];
       
       const x = e.touches ? e.touches[0].clientX : e.clientX;
       const y = e.touches ? e.touches[0].clientY : e.clientY;
@@ -545,7 +558,7 @@
     window.addEventListener('touchmove', createHeart, { passive: true });
     window.addEventListener('mousemove', createHeart);
 
-    // 5. Confetti & Modal
+    // 6. Confetti & Pop-Up Modal
     function triggerLove() {
       confetti({
         particleCount: 110,
