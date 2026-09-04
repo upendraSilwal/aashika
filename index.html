@@ -41,7 +41,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      pointer-events: none; /* Completely view-only, clicks pass right through */
+      pointer-events: none; /* View-only, clicks pass right through */
       z-index: 0;
       overflow: hidden;
     }
@@ -360,16 +360,16 @@
 
   <div class="polaroid-bg-container">
     <div class="polaroid-card p1">
-      <img src="baby.jpg" alt="Memory 1">
+      <img src="photo1.jpg" alt="Memory 1">
     </div>
     <div class="polaroid-card p2">
-      <img src="bubu.jpg" alt="Memory 2">
+      <img src="photo2.jpg" alt="Memory 2">
     </div>
     <div class="polaroid-card p3">
-      <img src="love.jpg" alt="Memory 3">
+      <img src="photo3.jpg" alt="Memory 3">
     </div>
     <div class="polaroid-card p4">
-      <img src="twin.jpg" alt="Memory 4">
+      <img src="photo4.jpg" alt="Memory 4">
     </div>
   </div>
 
@@ -452,7 +452,30 @@
     const musicBtn = document.getElementById('musicBtn');
     let hasPlayed = false;
 
-    // Trigger audio playback across all touch/scroll/click events
+    // 1. Dynamic Time-Based Greeting
+    function setDynamicGreeting() {
+      const badgeElement = document.querySelector('.hero-badge');
+      if (!badgeElement) return;
+
+      const currentHour = new Date().getHours();
+      let greeting = "";
+
+      if (currentHour >= 5 && currentHour < 12) {
+        greeting = "☀️ Good Morning, Bubu! 🐼";
+      } else if (currentHour >= 12 && currentHour < 17) {
+        greeting = "🌤️ Good Afternoon, Bubu! 🐼";
+      } else if (currentHour >= 17 && currentHour < 22) {
+        greeting = "🌆 Good Evening, Bubu! 🐼";
+      } else {
+        greeting = "🌙 Sweet Dreams, Mayalu 🐼";
+      }
+
+      badgeElement.innerText = greeting;
+    }
+
+    window.addEventListener('DOMContentLoaded', setDynamicGreeting);
+
+    // 2. Trigger audio playback across touch/scroll/click events
     function startAudioOnInteraction() {
       if (!hasPlayed) {
         audio.play().then(() => {
@@ -478,7 +501,7 @@
       });
     }
 
-    // Manual Music Button Toggle
+    // 3. Manual Music Button Toggle
     function toggleMusic() {
       if (audio.paused) {
         audio.play();
@@ -491,7 +514,7 @@
       }
     }
 
-    // Touch Heart Trail Effect
+    // 4. Touch Heart Trail Effect
     function createHeart(e) {
       const heart = document.createElement('div');
       heart.className = 'heart-trail';
@@ -510,7 +533,7 @@
     window.addEventListener('touchmove', createHeart, { passive: true });
     window.addEventListener('mousemove', createHeart);
 
-    // Big Hug Pop-Up & Confetti Trigger
+    // 5. Big Hug Pop-Up & Confetti Trigger
     function triggerLove() {
       confetti({
         particleCount: 100,
